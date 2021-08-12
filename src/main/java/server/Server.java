@@ -19,7 +19,7 @@ public class Server {
     protected final int THREADS_NUMBER = 64;
     protected final ExecutorService serverThreadPool;
     protected Map<String, Handler> handlers = new ConcurrentHashMap<>();
-    protected final List<String> validPaths = List.of("/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js");
+    protected final List<String> validPaths = List.of("/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js", "/default-get.html");
 
 
     protected final static String KEY_SEPARATOR = ":";
