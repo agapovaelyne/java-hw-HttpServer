@@ -1,5 +1,7 @@
 package server;
 
+import etc.HttpMethods;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,7 +19,7 @@ public class Server {
     protected final int THREADS_NUMBER = 64;
     protected final ExecutorService serverThreadPool;
     protected Map<String, Handler> handlers = new ConcurrentHashMap<>();
-    protected final List<String> validPaths = List.of("/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js");
+    protected final List<String> validPaths = List.of("/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js", "/default-get.html");
 
 
     protected final static String KEY_SEPARATOR = ":";
@@ -94,11 +96,15 @@ public class Server {
     }
 
     public void addHandler(String requestMethod, String requestedPath, Handler handler) throws IOException {
-        String key = requestMethod + KEY_SEPARATOR + requestedPath;
-        if (handlers.get(key) == null) {
-            handlers.put(key, handler);
-        } else {
-            throw new IOException(String.format("Handler for '%s %s' request already exists!", requestMethod, requestedPath));
+        try {
+            String key = HttpMethods.valueOf(requestMethod) + KEY_SEPARATOR + requestedPath;
+            if (handlers.get(key) == null) {
+                handlers.put(key, handler);
+            } else {
+                throw new IOException(String.format("Handler for '%s %s' request already exists!", requestMethod, requestedPath));
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IOException("The request method is not supported by the server");
         }
     }
 }
